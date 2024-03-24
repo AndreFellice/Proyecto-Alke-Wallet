@@ -3,9 +3,10 @@
  */
 package com.mycompany.alkewallet;
 
-
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -13,6 +14,10 @@ import java.util.ArrayList;
  */
 public class AlkeWallet {
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner leer = new Scanner(System.in);
 
@@ -22,19 +27,19 @@ public class AlkeWallet {
         BilleteraDigital saldo = new BilleteraDigital();
         BilleteraDigital deposito = new BilleteraDigital();
         BilleteraDigital retiro = new BilleteraDigital();
-        BilleteraDigital destinatario = new BilleteraDigital();
+        BilleteraDigital destinatario = null;
 
-        System.out.println("***************");
+        System.out.println("****************");
         System.out.println("ALKEMY  DIGITAL ");
+        System.out.println("****************");
         System.out.println(" ");
 
-        //      System.out.println("Por Favor Ingrese su nombre: ");
-        //    String nombreCliente = leer.nextLine();
         boolean nombreValido = false;
         String nombreCliente = "";
 
         while (!nombreValido) {
             try {
+                System.out.println("Bienvenido  ");
                 System.out.println("Por favor, ingrese su nombre: ");
                 nombreCliente = leer.nextLine(); // Leer la entrada del usuario como String
 
@@ -57,6 +62,7 @@ public class AlkeWallet {
 
         }
         System.out.println("Nombre validado: " + nombreCliente);
+        System.out.println("________________________________ ");
 
         boolean rutValido = false;
         int rut = 0;
@@ -85,10 +91,9 @@ public class AlkeWallet {
                 rut = Integer.parseInt(entrada); // Convertir la entrada a un entero
 
                 // verifica que el numero no contenga numeros negativos 
-               // if (rut <= 0) {
-                 //   throw new Exception("El Rut debe ser positivo.");
+                // if (rut <= 0) {
+                //   throw new Exception("El Rut debe ser positivo.");
                 //}
-
                 rutValido = true; // Si no ocurre ninguna excepción, marcamos como válido
             } catch (NumberFormatException e) {
                 System.out.println("Error: Debes ingresar numeros validos para el rut.");
@@ -98,6 +103,7 @@ public class AlkeWallet {
             }
         }
         System.out.println("Rut validado: " + rut);
+        System.out.println("________________________________ ");
 
         // Crear un cliente y agregarlo a la lista de usuarios
         Cliente cliente1 = new Cliente(nombreCliente, rut, new BilleteraDigital());
@@ -106,22 +112,38 @@ public class AlkeWallet {
         // menu de opciones Wallet
         int opcion;
         do {
+            // Obtener la fecha y hora actual
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date fechaActual = new Date();
+            String fechaHoraActual = formatoFecha.format(fechaActual);
+            System.out.println("W     W     W     ");
+            System.out.println("  W  W W  W    ");
+            System.out.println("    W   W            ");
+          
             System.out.println("________________________________ ");
-            System.out.println("    MENU WALLET                    ");
+            System.out.println("                     MENU WALLET  ");
+            System.out.println("             " + fechaHoraActual);
             System.out.println("________________________________");
-            System.out.println("Bienvenido  Don(a) " + nombreCliente);
-            System.out.println(" Por favor ingrese una opcion: ");
+            System.out.println("Don(a) " + nombreCliente);
             System.out.println("________________________________");
             System.out.println(" 0: SALIR MENU");
-            System.out.println(" 1: CONSULTA SALDO");
-            System.out.println(" 2: DEPOSITAR DINERO");
-            System.out.println(" 3: RETIRAR DINERO");
+            System.out.println(" 1: CONSULTA DE SALDO");
+            System.out.println(" 2: REALIZAR DEPOSITO");
+            System.out.println(" 3: REALIZAR RETIRO");
             System.out.println(" 4: CONVERTIR MONEDA");
-            System.out.println(" 5: OBTENER TRANSACCIONES");
+            System.out.println(" 5: HISTORIAL DE  TRANSACCIONES");
             System.out.println(" 6: REALIZAR TRANSFERENCIA ");
             System.out.println("________________________________");
+            System.out.println(" Por favor ingrese una opcion: ");
+            System.out.println("________________________________");
             System.out.println(" ");
-
+            // Validar entrada numérica
+            
+            while (!leer.hasNextInt()) {
+                System.out.println("Entrada invalida. Por favor, ingrese ua opcion de 0 a 6.");
+                leer.next(); // Limpiar la entrada inválida
+            }
+           
             opcion = leer.nextInt();
 
             switch (opcion) {
@@ -134,64 +156,103 @@ public class AlkeWallet {
                         opcion = 0; // Para salir del bucle
                     } else if (confirmacion == 2) {
                         System.out.println("Volviendo a  Menu.");
+                        System.out.println("________________________________ ");
                         opcion = -1; // Vuelve a mostrar el menú 
                     }
-
                     break;
 
                 case 1:
+                    // Muestra saldo del cliente con un formato String para visualizar todos los numeros de la cifra del saldo
                     System.out.println("Saldo actual: $" + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                    System.out.println("________________________________ ");
                     break;
 
                 case 2:
-                    System.out.println("Ingrese el monto a depositar ");
+                    System.out.println("*Para volver a menu presione 0*");
+                    System.out.println("Ingrese el monto a depositar: ");
                     double cantidad = leer.nextDouble();
+                    if (cantidad == 0) { // opcion para que el usuario vuelva al menu sin generar un deposito
+                        System.out.println("Volviendo al Menu.");
+                        break;
+                    }
                     cliente1.getWallet().depositar(cantidad);
+                    System.out.println("Monto depositado: " + String.format("%.0f", cantidad));
+                    System.out.println("Su nuevo saldo es: " + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                    System.out.println("________________________________ ");
                     break;
 
                 case 3:
-                    System.out.println("Ingrese el monto a retirar");
-                    cantidad = leer.nextDouble();
-                    if (cantidad > 0) {
-                        if (cliente1.getWallet().obtenerSaldo() >= cantidad) {
-                            cliente1.getWallet().retirar(cantidad);
-                            System.out.println("Monto retirado: " + cantidad);
-                            System.out.println("Su nuevo saldo es: " + cliente1.getWallet().obtenerSaldo());
+                    System.out.println("*Para volver a menu presione 0*");
+                    System.out.println("Ingrese el monto a retirar: ");
+                    double cantidadRetiro = leer.nextDouble();
+                    if (cantidadRetiro == 0) {
+                        System.out.println("Volviendo al Menu.");
+                        break;
+                    }
+                    if (cantidadRetiro > 0) {
+                        if (cliente1.getWallet().obtenerSaldo() >= cantidadRetiro) {
+                            cliente1.getWallet().retirar(cantidadRetiro);
+                            System.out.println("Monto retirado: " + String.format("%.0f", cantidadRetiro));
+                            System.out.println("Su nuevo saldo es: " + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                            System.out.println("________________________________ ");
                         } else {
                             System.out.println("No se pudo realizar el retiro. Saldo insuficiente.");
                         }
-                    } else {
-                        System.out.println("Error: La cantidad a retirar debe ser mayor que cero.");
-                    }
+                    } 
                     break;
 
                 case 4:
-                    System.out.println("Ingrese cantidad a convertir  ");
+                    System.out.println("*Para volver a menu presione 0*");
+                    System.out.println("Ingrese el monto a convertir: ");
                     cantidad = leer.nextDouble();
+                    if (cantidad == 0) {
+                        System.out.println("Volviendo al Menú.");
+                        break;
+                    }
                     System.out.println("Seleccione una opcion de cambio de Moneda: ");
                     System.out.println("1. Retire CLP en  USD");
                     System.out.println("2. Retire CLP en  EU ");
-                    System.out.println("3. Deposite USD a CLP en su Wallet " );
+                    System.out.println("3. Deposite USD a CLP en su Wallet ");
                     System.out.println("4. Deposite EUR a CLP en su Wallet ");
                     int aMoneda = leer.nextInt();
                     cliente1.getWallet().convertirMoneda(aMoneda, cantidad);// Llama al método convertirMoneda según la opción seleccionada
+                    System.out.println("Su nuevo saldo es: $" + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                    System.out.println("________________________________ ");
                     break;
 
                 case 5:
                     System.out.println("Cartola de Operaciones ");
                     System.out.println("Don(a)  " + nombreCliente);
                     cliente1.getWallet().obtenerTransacciones();
+                    System.out.println("________________________________ ");
                     break;
 
                 case 6:
-                    System.out.print("Ingrese el monto a transferir: ");
-                    double montoTransferencia = leer.nextDouble();
+                    System.out.println("*Para volver a menu presione 0*");
+                    System.out.println("Ingrese el monto a transferir: ");
+                    double montoTransferencia;
+
+                    // Validar entrada numérica para montoTransferencia
+                    while (!leer.hasNextDouble()) {
+                        System.out.println("Entrada invalida. Por favor, ingrese un valor numerico.");
+                        leer.next(); // Limpiar la entrada inválida
+                    }
+                    montoTransferencia = leer.nextDouble();
+                    if (montoTransferencia == 0) {
+                        System.out.println("Volviendo al Menu.");
+                        break;
+                    }
                     System.out.println("Seleccione el destinatario:");
                     System.out.println("1. Mario Canedo");
                     System.out.println("2. Cristian Rodriguez");
                     System.out.println("3. Andre Cuetos");
-                    int opcionDestinatario = leer.nextInt();
-
+                    int opcionDestinatario;
+                    // Validar entrada numérica para opcionDestinatario
+                    while (!leer.hasNextInt()) {
+                        System.out.println("Por favor, ingrese un valor numerico de 1 a 3.");
+                        leer.next(); // Limpiar la entrada inválida
+                    }
+                    opcionDestinatario = leer.nextInt();
                     switch (opcionDestinatario) {
                         case 1:
                             destinatario = new BilleteraDigital();
@@ -211,9 +272,10 @@ public class AlkeWallet {
                     }
 
                     cliente1.getWallet().hacerTransferencia(montoTransferencia, destinatario);
-
+                    System.out.println("Su nuevo saldo es: $" + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                    System.out.println("________________________________ ");
                 default:
-                    System.out.println("Eilja una opcion valida");
+                    System.out.println("Elija una opcion valida");
             }
         } while (opcion != 0);
 

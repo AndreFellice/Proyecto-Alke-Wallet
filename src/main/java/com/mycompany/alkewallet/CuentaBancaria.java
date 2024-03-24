@@ -8,7 +8,7 @@ package com.mycompany.alkewallet;
  *
  * @author andre
  */
-public class CuentaBancaria {
+public class CuentaBancaria extends BilleteraDigital {
 
     private int numeroCuenta;
 
