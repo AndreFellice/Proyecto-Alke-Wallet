@@ -4,7 +4,6 @@
  */
 package com.mycompany.alkewallet;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -17,21 +16,21 @@ public class BilleteraDigital implements Wallet {
 
     private double saldo; // Muestra el saldo de cliente
     private List<Transaccion> transacciones = new ArrayList<>();  //mostrar o listar  informacion de cliente
-    private String nombreCliente;
+    private String nombreDestinatario;
 
     public BilleteraDigital() {
         this.saldo = 0.0;
         this.transacciones = new ArrayList<>();
-        this.nombreCliente = "";
+        this.nombreDestinatario = "";
 
     }
 
-    public void setNombreCliente(String nombre) {
-        this.nombreCliente = nombre;
+    public void setnombreDestinatario(String nombre) {
+        this.nombreDestinatario = nombre;
 
     }
-     private String getnombreCliente() {
-        return nombreCliente;
+     private String getnombreDestinatario() {
+        return nombreDestinatario;
     }
     
 
@@ -49,7 +48,6 @@ public class BilleteraDigital implements Wallet {
             this.saldo += cantidad;
             String cantidadR = String.format("%.0f", cantidad);
             transacciones.add(new Transaccion(new Date(), "Deposito: " + cantidadR));
-            String saldoR = String.format("%.0f", this.saldo);
             System.out.println("Deposito correcto ");
         } else {
             System.out.println("Error la cantidad debe ser mayor a 0");
@@ -66,7 +64,6 @@ public class BilleteraDigital implements Wallet {
             this.saldo -= cantidad;
             String cantidadR = String.format("%.0f", cantidad);
             transacciones.add(new Transaccion(new Date(), "Retiro: -" + cantidadR));
-            String saldoR = String.format("%.0f", this.saldo);
             System.out.println("Retiro exitoso");
         } else {
             System.out.println("Error: saldo insuficiente o cantidad inválida.");
@@ -78,53 +75,64 @@ public class BilleteraDigital implements Wallet {
         // Define la tasa de cambio de USD o Euro  a CLP (pesos chilenos)
         double tasaCambioUsd = 968;  // // Tasa de cambio: 1 Dólar = 968 pesos chilenos
         double tasaCambioEu = 1051.89; // // Tasa de cambio: 1 Euro = 1052 pesos chilenos
-
         // Verifica si la conversión es de USD o  EU  a CLP o viceversa
-        if (aMoneda == 1) {
-            // Realiza la conversión a USD
-            double dolares = cantidad / tasaCambioUsd;
-            this.saldo -= cantidad;
-            String cantidadR = String.format("%.0f", cantidad);
-            transacciones.add(new Transaccion(new Date(), "Retiro * conversion * cambio de divisa: -" + cantidadR));
-            System.out.println("Su cantidad retirada en Pesos es $" + cantidadR);
-            System.out.println("Retiro exitoso."); 
-            System.out.println("La cantidad convertida a dolares es: $" + String.format("%.0f",dolares));
-            
-            
-        } else if (aMoneda == 2) {
-            // Realiza la conversión a EU
-            double euros = cantidad / tasaCambioEu;
-            this.saldo -= cantidad;
-            String cantidadR = String.format("%.0f", cantidad);
-            transacciones.add(new Transaccion(new Date(), "Retiro * conversion * cambio de divisa: -" + cantidadR));
-            System.out.println("Su cantidad retirada en Pesos es $" + cantidadR);
-            System.out.println("Retiro exitoso."); 
-            System.out.println("La cantidad convertida a euros es €" + String.format("%.0f",euros));
-       
-        } else if (aMoneda == 3) {
-            // Convertir de dólares a pesos chilenos
-            double pesosChilenos = cantidad * tasaCambioUsd;
-            this.saldo += pesosChilenos;
-            String cantidadR = String.format("%.0f", cantidad);
-            transacciones.add(new Transaccion(new Date(), "Deposito * conversion * cambio de divisa: -" + cantidadR));
-             System.out.println("Su deposito en dolares es $" + cantidadR);
-            System.out.println("Deposito exitoso.");
-             System.out.println("La cantidad convertida a pesos chilenos es: $" +String.format("%.0f",  pesosChilenos));
-           
-        } else if (aMoneda == 4) {
-            // Convertir de euros a pesos chilenos
-            double pesosChilenos = cantidad * tasaCambioEu;
-            this.saldo += pesosChilenos;
-            String cantidadR = String.format("%.0f", cantidad);
-            transacciones.add(new Transaccion(new Date(), "Deposito * conversion * cambio de divisa: -" + cantidadR));
-            System.out.println("Su deposito en euros es $" + cantidadR);
-            System.out.println("Deposito exitoso.");
-            System.out.println("La cantidad convertida a pesos chilenos es: $" + String.format("%.0f",  pesosChilenos));
-           
-        } else {
-
-            // Conversión no soportada
-            System.out.println("Conversion no soportada.");
+        switch (aMoneda) {
+            case 1 ->                 {
+                    // Cliente Convierte  dólares  en  pesos chilenos para deposito en su cuenta
+                    double pesosChilenos = cantidad * tasaCambioUsd;
+                    this.saldo += pesosChilenos;
+                    String cantidadR = String.format("%.0f", cantidad);
+                    transacciones.add(new Transaccion(new Date(), "Deposito * conversion * cambio de divisa: -" + cantidadR));
+                    System.out.println("Su deposito en dolares es $" + cantidadR);
+                    System.out.println("Deposito exitoso.");
+                    System.out.println("La cantidad convertida a pesos chilenos es: $" +String.format("%.0f",  pesosChilenos));
+                }
+            case 2 ->                 {
+                    // Cliente solicita Conversion de  pesos chilenos a dolares y retira en pesos chilenos desde su cuenta
+                    double pesosChilenos = cantidad * tasaCambioUsd;
+                    this.saldo -= pesosChilenos;
+                    String cantidadR = String.format("%.0f", cantidad);
+                    transacciones.add(new Transaccion(new Date(), "Retiro * conversion * cambio de divisa: -" + cantidadR));
+                    System.out.println("Su cantidad solicitada en dolares es $" + cantidadR);
+                    System.out.println("Retiro exitoso.");
+                    System.out.println("La cantidad retirada en CLP para cambiar a USD es: $" + String.format("%.0f",pesosChilenos));
+                }
+            case 3 ->                 {
+                    //Cliente Convierte  euros  en  pesos chilenos para deposito en su cuenta
+                    double pesosChilenos = cantidad * tasaCambioEu;
+                    this.saldo += pesosChilenos;
+                    String cantidadR = String.format("%.0f", cantidad);
+                    transacciones.add(new Transaccion(new Date(), "Deposito * conversion * cambio de divisa: -" + cantidadR));
+                    System.out.println("Su deposito en euros es $" + cantidadR);
+                    System.out.println("Deposito exitoso.");
+                    System.out.println("La cantidad convertida a pesos chilenos es: $" + String.format("%.0f",  pesosChilenos));
+                }
+            case 4 ->                 {
+                    // Cliente solicita Conversion de  pesos chilenos a dolares y retira en pesos chilenos desde su cuenta
+                    double pesosChilenos = cantidad * tasaCambioEu;
+                    this.saldo -= pesosChilenos;
+                    String cantidadR = String.format("%.0f", cantidad);
+                    transacciones.add(new Transaccion(new Date(), "Retiro * conversion * cambio de divisa: -" + cantidadR));
+                    System.out.println("Su cantidad retirada en Pesos es $" + cantidadR);
+                    System.out.println("Retiro exitoso.");
+                    System.out.println("La cantidad retirada en CLP para cambiar a EU es " + String.format("%.0f",pesosChilenos));
+                }
+            case 5 -> {
+                // Cliente solicita Conversion de  pesos chilenos a dolares
+                double dolares = cantidad / tasaCambioUsd;
+                transacciones.add(new Transaccion(new Date(), " Conversion a dolares * cambio de divisa: -" + String.format("%.0f",dolares)));
+                System.out.println("El valor del dolar es $" + tasaCambioUsd);
+                System.out.println("La Conversion a moneda extramjera es: $ " + String.format("%.0f",dolares));
+            }
+            case 6 -> {
+                // Cliente solicita Conversion de  pesos chilenos a euros
+                double euros = cantidad / tasaCambioEu;
+                transacciones.add(new Transaccion(new Date(), " Conversion a dolares * cambio de divisa: -" + String.format("%.0f",euros)));
+                System.out.println("El valor del dolar es $" + tasaCambioUsd);
+                System.out.println("La Conversion a moneda extranjera es: $ " + String.format("%.0f",euros));
+            }
+            default -> // Conversión no soportada
+                System.out.println("Conversion no soportada.");
         }
 
     }
@@ -144,10 +152,10 @@ public class BilleteraDigital implements Wallet {
             this.saldo -= monto;
             destinatario.depositar(monto);
             String montoR = String.format("%.0f", monto);
-            transacciones.add(new Transaccion(new Date(), "Transferencia a " + destinatario.getnombreCliente() + ": -" + montoR));
+            transacciones.add(new Transaccion(new Date(), "Transferencia a " + destinatario.getnombreDestinatario() + ": -" + montoR));
             System.out.println("Transferencia exitosa");
             System.out.println("Ud trasnfririo $" +montoR );
-            System.out.println("A destinatario Don(a) " + destinatario.getnombreCliente());
+            System.out.println("A destinatario Don(a) " + destinatario.getnombreDestinatario());
         } else {
             System.out.println("Error: saldo insuficiente o monto inválido para la transferencia.");
         }

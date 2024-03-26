@@ -4,8 +4,6 @@
  */
 package com.mycompany.alkewallet;
 
-import java.util.List;
-
 /**
  *Clase cliente 
  * @author andre
@@ -25,13 +23,16 @@ public class Cliente {
     }
 
     // Contructor con parametros de cliente 
-    public Cliente(String nombreCliente,int rut, BilleteraDigital billetera) {
+    public Cliente(String nombreCliente, int rut) {
         this.nombreCliente = nombreCliente;
         this.rut = rut;
         //creamos instancia de billeteradigital para el usuario
         this.billetera = new BilleteraDigital();
 
     }
+
+   
+   
 
 //Getter para obtener nombre cliente
     public String getNombreCliente() {
@@ -60,6 +61,10 @@ public class Cliente {
    // Setter para establecer billetera digital asociada al cliente
     public void setBilletera(BilleteraDigital billetera) {
         this.billetera = billetera;
+    }
+
+    Object getBilleteraDigital() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

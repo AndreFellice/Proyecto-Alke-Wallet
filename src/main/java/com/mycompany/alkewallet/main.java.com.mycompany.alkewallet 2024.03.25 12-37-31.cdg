@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="main.java.com.mycompany.alkewallet">
+  <ClassDiagramComponents>
+    <Class name="AlkeWallet" package="com.mycompany.alkewallet" visibility="public" xPosition="20.0" yPosition="20.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="main" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String[]" name="args"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="BilleteraDigital" package="com.mycompany.alkewallet" visibility="public" xPosition="228.0" yPosition="0.0">
+      <Fields>
+        <Field name="saldo" type="double" visibility="private"/>
+        <Field name="transacciones" type="List&lt;Transaccion&gt;" visibility="private"/>
+        <Field name="nombreDestinatario" type="String" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="setnombreDestinatario" returnType="void" visibility="public">
+          <Argument type="String" name="nombre"/>
+        </Method>
+        <Method name="getnombreDestinatario" returnType="String" visibility="private"/>
+        <Method name="obtenerSaldo" returnType="double" visibility="public"/>
+        <Method name="depositar" returnType="void" visibility="public">
+          <Argument type="double" name="cantidad"/>
+        </Method>
+        <Method name="retirar" returnType="void" visibility="public">
+          <Argument type="double" name="cantidad"/>
+        </Method>
+        <Method name="convertirMoneda" returnType="void" visibility="public">
+          <Argument type="int" name="aMoneda"/>
+          <Argument type="Double" name="cantidad"/>
+        </Method>
+        <Method name="obtenerTransacciones" returnType="void" visibility="public"/>
+        <Method name="hacerTransferencia" returnType="void" visibility="public">
+          <Argument type="double" name="monto"/>
+          <Argument type="BilleteraDigital" name="destinatario"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Cliente" package="com.mycompany.alkewallet" visibility="public" xPosition="20.0" yPosition="407.0">
+      <Fields>
+        <Field name="nombreCliente" type="String" visibility="private"/>
+        <Field name="rut" type="int" visibility="private"/>
+        <Field name="billetera" type="BilleteraDigital" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+        <Constructor visibility="public">
+          <Argument type="String" name="nombreCliente"/>
+          <Argument type="int" name="rut"/>
+          <Argument type="BilleteraDigital" name="billetera"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getNombreCliente" returnType="String" visibility="public"/>
+        <Method name="getRut" returnType="int" visibility="public"/>
+        <Method name="getWallet" returnType="BilleteraDigital" visibility="public"/>
+        <Method name="setNombreCliente" returnType="void" visibility="public">
+          <Argument type="String" name="nombreCliente"/>
+        </Method>
+        <Method name="setRut" returnType="void" visibility="public">
+          <Argument type="int" name="rut"/>
+        </Method>
+        <Method name="setBilletera" returnType="void" visibility="public">
+          <Argument type="BilleteraDigital" name="billetera"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="CuentaBancaria" package="com.mycompany.alkewallet" visibility="public" xPosition="480.0" yPosition="360.0">
+      <Fields>
+        <Field name="numeroCuenta" type="int" visibility="private"/>
+        <Field name="TipoCuenta" type="int" visibility="private"/>
+        <Field name="Password" type="int" visibility="private"/>
+        <Field name="telefono" type="int" visibility="private"/>
+        <Field name="domicilio" type="String" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="int" name="numeroCuenta"/>
+          <Argument type="int" name="TipoCuenta"/>
+          <Argument type="int" name="Password"/>
+          <Argument type="int" name="telefono"/>
+          <Argument type="String" name="domicilio"/>
+          <Argument type="String" name="nombreCliente"/>
+          <Argument type="int" name="rut"/>
+          <Argument type="BilleteraDigital" name="billetera"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getNumeroCuenta" returnType="int" visibility="public"/>
+        <Method name="getTipoCuenta" returnType="int" visibility="public"/>
+        <Method name="getPassword" returnType="int" visibility="public"/>
+        <Method name="getTelefono" returnType="int" visibility="public"/>
+        <Method name="getDomicilio" returnType="String" visibility="public"/>
+        <Method name="setNumeroCuenta" returnType="void" visibility="public">
+          <Argument type="int" name="numeroCuenta"/>
+        </Method>
+        <Method name="setTipoCuenta" returnType="void" visibility="public">
+          <Argument type="int" name="TipoCuenta"/>
+        </Method>
+        <Method name="setPassword" returnType="void" visibility="public">
+          <Argument type="int" name="Password"/>
+        </Method>
+        <Method name="setTelefono" returnType="void" visibility="public">
+          <Argument type="int" name="telefono"/>
+        </Method>
+        <Method name="setDomicilio" returnType="void" visibility="public">
+          <Argument type="String" name="domicilio"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Transaccion" package="com.mycompany.alkewallet" visibility="public" xPosition="747.0" yPosition="122.0">
+      <Fields>
+        <Field name="fecha" type="Date" visibility="private"/>
+        <Field name="descripcion" type="String" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="Date" name="fecha"/>
+          <Argument type="String" name="descripcion"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getFecha" returnType="Date" visibility="public"/>
+        <Method name="getDescripcion" returnType="String" visibility="public"/>
+        <Method name="setFecha" returnType="void" visibility="public">
+          <Argument type="Date" name="fecha"/>
+        </Method>
+        <Method name="setDescripcion" returnType="void" visibility="public">
+          <Argument type="String" name="descripcion"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Interface name="Wallet" package="com.mycompany.alkewallet" visibility="public" xPosition="1089.0" yPosition="20.0">
+      <Methods>
+        <Method name="obtenerSaldo" returnType="double" visibility="package"/>
+        <Method name="depositar" returnType="void" visibility="package">
+          <Argument type="double" name="cantidad"/>
+        </Method>
+        <Method name="retirar" returnType="void" visibility="package">
+          <Argument type="double" name="cantidad"/>
+        </Method>
+        <Method name="convertirMoneda" returnType="void" visibility="package">
+          <Argument type="int" name="aMoneda"/>
+          <Argument type="Double" name="cantidad"/>
+        </Method>
+        <Method name="obtenerTransacciones" returnType="void" visibility="package"/>
+        <Method name="hacerTransferencia" returnType="void" visibility="package">
+          <Argument type="double" name="monto"/>
+          <Argument type="BilleteraDigital" name="destinatario"/>
+        </Method>
+      </Methods>
+    </Interface>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <UseRelation source="com.mycompany.alkewallet.BilleteraDigital" target="com.mycompany.alkewallet.BilleteraDigital" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="billetera" source="com.mycompany.alkewallet.Cliente" target="com.mycompany.alkewallet.BilleteraDigital" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="com.mycompany.alkewallet.Transaccion" target="com.mycompany.alkewallet.BilleteraDigital"/>
+    <UseRelation source="com.mycompany.alkewallet.Cliente" target="com.mycompany.alkewallet.BilleteraDigital" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="com.mycompany.alkewallet.BilleteraDigital" target="com.mycompany.alkewallet.Wallet"/>
+    <UseRelation source="com.mycompany.alkewallet.Wallet" target="com.mycompany.alkewallet.BilleteraDigital" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="transacciones" source="com.mycompany.alkewallet.BilleteraDigital" target="com.mycompany.alkewallet.Transaccion" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="List&lt;Transaccion&gt;"/>
+    <IsRelation name="is" source="com.mycompany.alkewallet.CuentaBancaria" target="com.mycompany.alkewallet.Cliente"/>
+  </ClassDiagramRelations>
+</ClassDiagram>

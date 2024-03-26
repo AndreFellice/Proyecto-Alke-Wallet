@@ -8,33 +8,53 @@ package com.mycompany.alkewallet;
  *
  * @author andre
  */
-public class CuentaBancaria extends BilleteraDigital {
+public class CuentaBancaria extends Cliente {
 
     private int numeroCuenta;
+    private int TipoCuenta;
+    private int Password;
+    private int telefono;
+    
 
-    private String saldo;
-
-    public CuentaBancaria(int numeroCuenta, String saldo, String nombreCliente, int rut, BilleteraDigital Wallet) {
-
+    public CuentaBancaria(int numeroCuenta, int TipoCuenta, int Password, int telefono,  String nombreCliente, int rut, BilleteraDigital billetera) {
+        super(nombreCliente, rut);
         this.numeroCuenta = numeroCuenta;
-
-        this.saldo = saldo;
+        this.TipoCuenta = TipoCuenta;
+        this.Password = Password;
+        this.telefono = telefono;
+       
     }
 
     public int getNumeroCuenta() {
         return numeroCuenta;
     }
 
-    public String getSaldo() {
-        return saldo;
+    public int getTipoCuenta() {
+        return TipoCuenta;
+    }
+
+    public int getPassword() {
+        return Password;
+    }
+
+    public int getTelefono() {
+        return telefono;
     }
 
     public void setNumeroCuenta(int numeroCuenta) {
         this.numeroCuenta = numeroCuenta;
     }
 
-    public void setSaldo(String saldo) {
-        this.saldo = saldo;
+    public void setTipoCuenta(int TipoCuenta) {
+        this.TipoCuenta = TipoCuenta;
+    }
+
+    public void setPassword(int Password) {
+        this.Password = Password;
+    }
+
+    public void setTelefono(int telefono) {
+        this.telefono = telefono;
     }
 
 }

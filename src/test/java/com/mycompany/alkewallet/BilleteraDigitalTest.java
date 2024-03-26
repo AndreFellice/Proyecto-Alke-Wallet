@@ -16,24 +16,39 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author andre
  */
 public class BilleteraDigitalTest {
-    
+Cliente cliente1 = new Cliente("Andre", 1);
+   
+
     public BilleteraDigitalTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
-    
+
     @BeforeEach
     public void setUp() {
     }
-    
+
     @AfterEach
     public void tearDown() {
+    }
+
+    /**
+     * Test of setnombreDestinatario method, of class BilleteraDigital.
+     */
+    @Test
+    public void testSetnombreDestinatario() {
+        System.out.println("setnombreDestinatario");
+        String nombre = "";
+        BilleteraDigital instance = new BilleteraDigital();
+        instance.setnombreDestinatario(nombre);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -56,11 +71,19 @@ public class BilleteraDigitalTest {
     @Test
     public void testDepositar() {
         System.out.println("depositar");
-        double cantidad = 0.0;
-        BilleteraDigital instance = new BilleteraDigital();
-        instance.depositar(cantidad);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+         // Se instancia al usuario quien puede usar los metodos 
+        
+        //Realizar un depósito válido
+        cliente1.getBilleteraDigital().depositar(500.0);
+        // Compara los valores
+        assertEquals(500.0, cliente1.getBilleteraDigital().obtenerSaldo(), 0);
+        //Realizar un deposito con una cantidad negativa
+        cliente1.getBilleteraDigital().depositar(-500.0);
+        // compara lo que se espera con lo que se trae
+        assertEquals(500.0, cliente1.getBilleteraDigital().obtenerSaldo(), 0);
+        // depositar  un valor 0
+        cliente1.getBilleteraDigital().depositar(0);
+        assertEquals(500.0, cliente1.getBilleteraDigital().obtenerSaldo(), 0);
     }
 
     /**
@@ -69,11 +92,24 @@ public class BilleteraDigitalTest {
     @Test
     public void testRetirar() {
         System.out.println("retirar");
-        double cantidad = 0.0;
-        BilleteraDigital instance = new BilleteraDigital();
-        instance.retirar(cantidad);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // realizar un retiro 
+        Cliente cliente2 = new Cliente ("Peter",1);
+        cliente2.getBilleteraDigital().depositar(2000.0);
+
+        // retirar saldo
+        cliente2.getBilleteraDigital().retirar(1000.0);
+        // compara los valores
+        assertEquals(1000.0, cliente2.getBilleteraDigital().obtenerSaldo(), 0);
+
+        // intentar realizar un giro con una cantidad negativa 
+        cliente2.getBilleteraDigital().retirar(-50.0);
+        // compara lo que se espera con lo que se trae
+        assertEquals(1000.0, cliente2.BilleteraDigital().obtenerSaldo(), 0);
+
+        // girar  un valor 0
+        cliente2.getBilleteraDigital().retirar(0);
+        assertEquals(1000.0, cliente2.getBilleteraDigital().obtenerSaldo(), 0);
+
     }
 
     /**
@@ -116,17 +152,4 @@ public class BilleteraDigitalTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of setNombreCliente method, of class BilleteraDigital.
-     */
-    @Test
-    public void testSetNombreCliente() {
-        System.out.println("setNombreCliente");
-        String nombre = "";
-        BilleteraDigital instance = new BilleteraDigital();
-        instance.setNombreCliente(nombre);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
 }
