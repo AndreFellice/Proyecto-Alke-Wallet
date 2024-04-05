@@ -10,14 +10,20 @@ import java.util.Date;
  *
  * @author andre
  */
-public class Transaccion extends BilleteraDigital {
+public class Transaccion  {
 
     private Date fecha;
     private String descripcion;
 
+    /**
+     *
+     * @param fecha
+     * @param descripcion
+     */
     public Transaccion(Date fecha, String descripcion) {
         this.fecha = fecha;
         this.descripcion = descripcion;
+
     }
 
     // Getters y setters (si es necesario)

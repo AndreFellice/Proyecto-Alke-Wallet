@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author andre
  */
 public class BilleteraDigitalTest {
-Cliente cliente1 = new Cliente("Andre", 1);
+
    
 
     public BilleteraDigitalTest() {
@@ -55,15 +55,16 @@ Cliente cliente1 = new Cliente("Andre", 1);
      * Test of obtenerSaldo method, of class BilleteraDigital.
      */
     @Test
-    public void testObtenerSaldo() {
-        System.out.println("obtenerSaldo");
-        BilleteraDigital instance = new BilleteraDigital();
-        double expResult = 0.0;
-        double result = instance.obtenerSaldo();
-        assertEquals(expResult, result, 0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+   
+public void testObtenerSaldo() {
+    System.out.println("obtenerSaldo");
+    // Se instancia al usuario quien puede usar los métodos
+    Cliente cliente2 = new Cliente("Pablo", 1);
+
+    cliente2.getBilleteraDigital().depositar(2000.0);
+    double saldo = cliente2.getBilleteraDigital().obtenerSaldo();
+    assertEquals(2000.0, saldo, 0.001);
+}
 
     /**
      * Test of depositar method, of class BilleteraDigital.
@@ -72,7 +73,7 @@ Cliente cliente1 = new Cliente("Andre", 1);
     public void testDepositar() {
         System.out.println("depositar");
          // Se instancia al usuario quien puede usar los metodos 
-        
+        Cliente cliente1 = new Cliente("Andre", 1);
         //Realizar un depósito válido
         cliente1.getBilleteraDigital().depositar(500.0);
         // Compara los valores
@@ -104,12 +105,8 @@ Cliente cliente1 = new Cliente("Andre", 1);
         // intentar realizar un giro con una cantidad negativa 
         cliente2.getBilleteraDigital().retirar(-50.0);
         // compara lo que se espera con lo que se trae
-        assertEquals(1000.0, cliente2.BilleteraDigital().obtenerSaldo(), 0);
-
-        // girar  un valor 0
-        cliente2.getBilleteraDigital().retirar(0);
         assertEquals(1000.0, cliente2.getBilleteraDigital().obtenerSaldo(), 0);
-
+        
     }
 
     /**

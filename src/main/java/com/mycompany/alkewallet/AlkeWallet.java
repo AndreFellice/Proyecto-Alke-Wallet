@@ -7,33 +7,248 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
+ * Clase principal que maneja la ejecución del programa de AlkeWallet. Permite a
+ * los usuarios acceder a sus cuentas, crear nuevas cuentas digitales, realizar
+ * operaciones como consultas de saldo, depósitos, retiros, conversiones de
+ * moneda, transferencias y ver el historial de transacciones.
  *
  * @author Andre Fellice
  */
 public class AlkeWallet {
+    // Lista de clientes predefinidos
+
+    private static final ArrayList<Cliente> clientesPredefinidos = new ArrayList<>();
+    private static final ArrayList<CuentaBancaria> cuentasPredefinidas = new ArrayList<>();
 
     /**
+     * Método principal que inicia la ejecución del programa.
      *
      * @param args
      */
     public static void main(String[] args) {
         Scanner leer = new Scanner(System.in);
-        //crea un ArrayList llamado usuarios que puede contener objetos del tipo Cliente
-        ArrayList<Cliente> usuarios = new ArrayList<>();
-        // instanciar objetos
-   
-        BilleteraDigital destinatario = null;
+        inicializarClientesPredefinidos();// Agregar clientes predefinidos
+        inicializarCuentasPredefinidas();  // Agregar cuentas bancarias predefinidas (contraseñas)
+        ArrayList<Cliente> clientesAdicionales = new ArrayList<>();// Crear lista para almacenar clientes nuevos
+        ArrayList<CuentaBancaria> cuentasAdicionales = new ArrayList<>(); //Crear lista para almacenar cuentas adicionales
 
-        System.out.println("****************");
-        System.out.println("ALKEMY  DIGITAL ");
-        System.out.println("****************");
+        int opcionCuenta = -1;
+
+        do {
+            mostrarMenuPrincipal();
+            // Validar entrada numérica
+            while (!leer.hasNextInt()) {
+                System.out.println("Entrada invalida. Por favor, ingrese una opcion de 0 a 3.");
+                leer.next(); // Limpiar la entrada inválida
+            }
+
+            opcionCuenta = leer.nextInt();
+            switch (opcionCuenta) {
+                case 1:
+                    System.out.println("*Para volver a Menu Principal presione 0*");
+                    accesoCuenta(leer, clientesPredefinidos, cuentasPredefinidas);
+                    break;
+
+                case 2:
+                    System.out.println("*Para volver a Menu Principal presione 0*");
+                    crearCuentaDigital(leer, clientesAdicionales, cuentasAdicionales);
+                    break;
+                case 3:
+                    System.out.println("Saliendo del Menu. Esta seguro?");
+                    System.out.println("1. Si    2. No");
+                    int salirMenu = leer.nextInt();
+                    if (salirMenu == 1) {
+                        System.out.println("Que tenga un buen dia .");
+                        return;// Para salir del programa
+                    } else if (salirMenu == 2) {
+                        System.out.println("Volviendo al  Menu Principal.");
+                        System.out.println("________________________________ ");
+                        break;// Continuar con el bucle do-while para mostrar el menú principal nuevamente
+                    } else {
+                        System.out.println("Opcion invalida. Volviendo al Menu Principal.");
+                        break; // Continuar con el bucle do-while para mostrar el menú principal nuevamente
+                    }
+                default:
+                    System.out.println("Por favor,elige una opcion valida");
+
+            }
+        } while (opcionCuenta != 0);
+
+    }
+
+    private static void mostrarMenuPrincipal() {
+        // Obtener la fecha y hora actual
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date fechaActual = new Date();
+        String fechaHoraActual = formatoFecha.format(fechaActual);
+
+        // Menu de opciones BANCO  ALKEMY  DIGITAL
+        // Menú para la creación de cuentas bancarias
+        System.out.println("________________________________ ");
+        System.out.println("W     W     W     ");
+        System.out.println("  W  W W  W    ");
+        System.out.println("    W   W            ");
+        System.out.println("________________________________ ");
+        System.out.println("          BANCO  ALKEMY  DIGITAL   ");
+        System.out.println("             " + fechaHoraActual);
+        System.out.println("________________________________");
+        System.out.println("Bienvenido");
+        System.out.println("Por Favor ingrese una opcion");
+        System.out.println("________________________________");
+        System.out.println(" 1: ACCESO A CUENTA");
+        System.out.println(" 2: CREAR CUENTA  DIGITAL");
+        System.out.println(" 3: SALIR MENU ");
+        System.out.println("________________________________");
         System.out.println(" ");
 
-        boolean nombreValido = false;
-        String nombreCliente = "";
+    }
+// Método para inicializar clientes predefinidos    
 
+    private static void inicializarClientesPredefinidos() {
+        // Agregar clientes predefinidos con sus RUTs
+        clientesPredefinidos.add(new Cliente("Andre Cuetos", 145449685, new BilleteraDigital()));
+        clientesPredefinidos.add(new Cliente("Mario Canedo", 203040506, new BilleteraDigital()));
+        clientesPredefinidos.add(new Cliente("Cristian Rodriguez", 152535456, new BilleteraDigital()));
+        clientesPredefinidos.add(new Cliente("Pato Donald", 123456789, new BilleteraDigital()));
+    }
+    // Método para inicializar cuentas bancarias predefinidas (contraseñas)
+
+    private static void inicializarCuentasPredefinidas() {
+        cuentasPredefinidas.add(new CuentaBancaria("14544968-001", clientesPredefinidos.get(0), 777777, 777777769, "fellice@example.com")); // asociado a Andre Cuetos
+        cuentasPredefinidas.add(new CuentaBancaria("12345678-002", clientesPredefinidos.get(1), 123456, 123456789, "mcanedo@example.com")); // asociado a Mario Canedo
+        cuentasPredefinidas.add(new CuentaBancaria("18765432-003", clientesPredefinidos.get(2), 987654, 987654321, "cristian@gmail.com")); // asociado a Cristian Rodriguez
+        cuentasPredefinidas.add(new CuentaBancaria("12344321-004", clientesPredefinidos.get(3), 112233, 987656789, "donald@hotmail.com")); // asociado a Pato Donald
+    }
+
+    private static void accesoCuenta(Scanner leer, ArrayList<Cliente> clientesPredefinidos, ArrayList<CuentaBancaria> cuentasPredefinidas) {
+
+        System.out.println("________________________________ ");
+        System.out.println("Accediendo a  Billetera Digital");
+        System.out.println("________________________________ ");
+        leer.nextLine(); // Limpiar el buffer del scanner
+        // Lógica para solicitar el RUT y la contraseña del cliente
+        System.out.println("Ingrese su RUT : ");
+        String rutClienteStr = leer.nextLine();
+
+        int rutCliente; // Intentamos convertir el RUT a un número entero
+        try {
+            rutCliente = Integer.parseInt(rutClienteStr);
+        } catch (NumberFormatException e) {
+            // Si no se puede convertir a un número, el RUT es inválido
+            System.out.println("El RUT ingresado no es valido. Por favor, verifique su RUT.");
+            return;
+        }
+        // Validar que el RUT no tenga numeros negativos
+        if (rutCliente <= 0) {
+            System.out.println("El RUT ingresado no es valido. Por favor, verifique su RUT.");
+            return;
+        }
+        System.out.println("Ingrese su contrasena: ");
+        int password = leer.nextInt();
+        // Variable para indicar si se encontró el cliente
+        boolean clienteEncontrado = false;
+        // Verificar si el cliente está en la lista de clientes predefinidos
+        for (int i = 0; i < clientesPredefinidos.size(); i++) {
+            Cliente cliente = clientesPredefinidos.get(i);
+            CuentaBancaria cuenta = cuentasPredefinidas.get(i);
+            if (String.valueOf(cliente.getRut()).equals(rutClienteStr)) {
+                if (cuenta.getPassword() == password) {
+                    // La autenticación es exitosa
+                    System.out.println("________________________________ ");
+                    System.out.println("Bienvenido, Don(a) " + cliente.getNombreCliente() + "!");
+                    menuWallet(leer, cliente); // Llama al método menuWallet con el cliente válido
+                    return;
+                } else {
+                    // Contraseña incorrecta
+                    System.out.println("Contrasena incorrecta. Intente nuevamente.");
+                    return;
+                }
+            }
+        }
+
+        // Mostrar mensaje si el cliente no fue encontrado
+        if (!clienteEncontrado) {
+            System.out.println("Cliente no encontrado. Verifique su RUT.");
+        }
+    }
+
+    private static void crearCuentaDigital(Scanner leer, ArrayList<Cliente> clientesAdicionales, ArrayList<CuentaBancaria> cuentasAdicionales) {
+// Crear un nuevo cliente
+        Cliente nuevoCliente = crearCliente(leer); // Crear una nueva cuenta bancaria
+        CuentaBancaria nuevaCuenta = crearCuentaBancaria(nuevoCliente, leer);// Asignar la billetera digital al cliente
+        BilleteraDigital nuevaBilletera = new BilleteraDigital(); // Crear una nueva billetera digital
+        nuevoCliente.setBilletera(nuevaBilletera); // Asignar la billetera al cliente
+        // Agregar el nuevo cliente a la lista de usuarios
+
+        clientesAdicionales.add(nuevoCliente);
+        cuentasAdicionales.add(nuevaCuenta);
+
+        System.out.println("Cuenta digital creada con exito Don(a)  " + nuevoCliente.getNombreCliente() + "!");
+        System.out.println("Accediendo a su Billetera Digital");
+        System.out.println("________________________________ ");
+
+        // Accede a una verificacion para acceder posteriormente al menú de la billetera digital
+        verificacionMenuWallet(leer, nuevoCliente);
+    }
+
+    private static Cliente crearCliente(Scanner leer) {
+        String nombre = validarNombre(leer);
+        int rut = validarRut(leer);
+        BilleteraDigital billetera = new BilleteraDigital(); // Crear una nueva billetera digital para el cliente
+        return new Cliente(nombre, rut, billetera);
+    }
+
+    private static CuentaBancaria crearCuentaBancaria(Cliente cliente, Scanner leer) {
+        System.out.println("Ingrese una contrasena para su cuenta: ");
+        System.out.println("Esta debe tener 6 numeros exactamente");
+        int password = leer.nextInt();
+        System.out.println("________________________________ ");
+        // Se solicita al usuario el número de teléfono y el correo electrónico
+        System.out.println("Ingrese su numero de telefono: ");
+        int telefono = leer.nextInt();
+        System.out.println("________________________________ ");
+        System.out.println("Ingrese su correo electronico: ");
+        String email = leer.next();
+        System.out.println("________________________________ ");
+
+        // Generar un número de cuenta 
+        String numeroCuenta = CuentaBancaria.generarNumeroCuenta(cliente.getRut());
+
+        return new CuentaBancaria(numeroCuenta, cliente, password, telefono, email);
+    }
+
+    private static void verificacionMenuWallet(Scanner leer, Cliente cliente) {
+        // Verificar la autenticación
+        if (autenticarCliente(leer, cliente)) {
+            System.out.println("Bienvenido, " + cliente.getNombreCliente() + "!");
+            mostrarMenuWallet(cliente); // Mostrar el menú de la billetera digital
+            // Agregar el resto de la lógica del menú de la billetera aquí
+        } else {
+            System.out.println("Cliente no encontrado o contrasena incorrecta. Verifique su RUT y contrasena.");
+        }
+    }
+
+// Método para autenticar al cliente
+    private static boolean autenticarCliente(Scanner leer, Cliente cliente) {
+        // Lógica para solicitar usuario (RUT) y contraseña
+        System.out.println("Ingrese su RUT: ");
+        int rutCliente = leer.nextInt();
+        System.out.println("Ingrese su contrasena: ");
+        int password = leer.nextInt();
+
+        // Verificar la autenticación
+        return cliente.getRut() == rutCliente && cliente.getCuentaBancaria().getPassword() == password;
+    }
+
+// Método para validar el nombre del cliente
+    private static String validarNombre(Scanner leer) {
+        String nombreCliente = "";
+        boolean nombreValido = false;
+
+        leer.nextLine(); // Limpiar el buffer del scanner 
         while (!nombreValido) {
             try {
                 System.out.println("Bienvenido  ");
@@ -44,7 +259,7 @@ public class AlkeWallet {
                     throw new Exception("El nombre no puede estar vacio.");
                 }
                 // Verificar si el nombre contiene solo letras
-                if (!nombreCliente.matches("[a-zA-Z- \"]+")) {
+                if (!nombreCliente.matches("[a-zA-ZáéíóúÁÉÍÓÚüÜ\\s]+")) {
                     throw new Exception("El nombre debe contener solo letras.");
                 }
                 // Verificar longitud mínima (por ejemplo, 3 caracteres)
@@ -52,22 +267,29 @@ public class AlkeWallet {
                     throw new Exception("El nombre debe tener al menos 3 caracteres.");
                 }
                 nombreValido = true; // Si no ocurre ninguna excepción, marcamos como válido
-
+                System.out.println("Nombre validado: " + nombreCliente);
+                System.out.println("________________________________ ");
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
             }
 
         }
-        System.out.println("Nombre validado: " + nombreCliente);
-        System.out.println("________________________________ ");
+        return nombreCliente;
+    }
+    // Método para validar el RUT del cliente
 
-        boolean rutValido = false;
+    private static int validarRut(Scanner leer) {
         int rut = 0;
+        boolean rutValido = false;
 
         while (!rutValido) {
             try {
-                System.out.println("Don(a) " + nombreCliente);
+
                 System.out.println("Ingrese su Rut (con digito verificador):  ");
+                while (!leer.hasNextInt()) {
+                    System.out.println("RUT invalido. Por favor, ingrese solo numeros.");
+                    leer.next(); // Limpiar el buffer del scanner
+                }
                 String entrada = leer.nextLine().trim(); // Leer la entrada del usuario como String
 
                 // Verificar si la entrada está vacía después de eliminar espacios en blanco
@@ -88,6 +310,8 @@ public class AlkeWallet {
                 rut = Integer.parseInt(entrada); // Convertir la entrada a un entero
 
                 rutValido = true; // Si no ocurre ninguna excepción, marcamos como válido
+                System.out.println("Rut validado: " + rut);
+                System.out.println("________________________________ ");
             } catch (NumberFormatException e) {
                 System.out.println("Error: Debes ingresar numeros validos para el rut.");
                 leer.next(); // Limpiar el buffer del scanner
@@ -95,163 +319,188 @@ public class AlkeWallet {
                 System.out.println("Error: " + e.getMessage());
             }
         }
-        System.out.println("Rut validado: " + rut);
-        System.out.println("________________________________ ");
+        return rut;
 
-        // Crear un cliente y agregarlo a la lista de usuarios
-        Cliente cliente1 = new Cliente(nombreCliente, rut);
-        usuarios.add(cliente1);
+    }
 
-        // menu de opciones Wallet
+    private static void menuWallet(Scanner leer, Cliente cliente) {
+
         int opcionWallet;
+
         do {
-            // Obtener la fecha y hora actual
-            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date fechaActual = new Date();
-            String fechaHoraActual = formatoFecha.format(fechaActual);
-            System.out.println("W     W     W     ");
-            System.out.println("  W  W W  W    ");
-            System.out.println("    W   W            ");
-
-            System.out.println("________________________________ ");
-            System.out.println("                     MENU WALLET  ");
-            System.out.println("             " + fechaHoraActual);
-            System.out.println("________________________________");
-            System.out.println("Don(a) " + nombreCliente);
-            System.out.println("________________________________");
-            System.out.println(" 0: SALIR MENU");
-            System.out.println(" 1: CONSULTA DE SALDO");
-            System.out.println(" 2: REALIZAR DEPOSITO");
-            System.out.println(" 3: REALIZAR RETIRO");
-            System.out.println(" 4: CONVERTIR MONEDA");
-            System.out.println(" 5: HISTORIAL DE  TRANSACCIONES");
-            System.out.println(" 6: REALIZAR TRANSFERENCIA ");
-            System.out.println("________________________________");
-            System.out.println(" Por favor ingrese una opcion: ");
-            System.out.println("________________________________");
-            System.out.println(" ");
+            mostrarMenuWallet(cliente);
             // Validar entrada numérica
-
             while (!leer.hasNextInt()) {
                 System.out.println("Entrada invalida. Por favor, ingrese ua opcion de 0 a 6.");
                 leer.next(); // Limpiar la entrada inválida
             }
-
             opcionWallet = leer.nextInt();
 
             switch (opcionWallet) {
-                case 0 -> {
+                case 0:
                     System.out.println("Saliendo del Menu. Esta seguro?");
                     System.out.println("1. Si    2. No");
+                    while (!leer.hasNextInt()) {
+                        System.out.println("Entrada invalida. Por favor, ingrese opcion numerica.");
+                        leer.next(); // Limpiar la entrada inválida
+                    }
                     int confirmacion = leer.nextInt();
-                    
+
                     switch (confirmacion) {
-                        case 1 -> {
-                            System.out.println("Que tenga un buen dia .");
-                            opcionWallet = 0; // Para salir del bucle
-                        }
-                        case 2 -> {
-                            System.out.println("Volviendo a  Menu.");
-                            System.out.println("________________________________ ");
-                            opcionWallet = -1; // Vuelve a mostrar el menú
-                        }
-                        default -> System.out.println("Opcion  no valida.");
+                        case 1:
+                            System.out.println("Saliendo del Menú. ¡Hasta luego!");
+                            return; // Salir del método menuWallet
+                        case 2:
+                            System.out.println("Cancelando operación. Volviendo al Menú...");
+                            break; // Volver al Menú
+                        default:
+                            System.out.println("Opción no válida. Volviendo al Menú...");
                     }
                     System.out.println("________________________________ ");
-                }
+                    break;
 
-
-
-                case 1 -> {
+                case 1:
                     // Muestra saldo del cliente con un formato String para visualizar todos los numeros de la cifra del saldo
-                    System.out.println("Saldo actual: $" + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                    System.out.println("Saldo actual: $" + String.format("%.2f", cliente.getBilletera().obtenerSaldo()));
                     System.out.println("________________________________ ");
-                }
-
-                case 2 -> {
+                    break;
+                case 2:
                     System.out.println("*Para volver a menu presione 0*");
                     System.out.println("Ingrese el monto a depositar: ");
-                    double cantidad = leer.nextDouble();
-                    if (cantidad == 0) { // opcion para que el usuario vuelva al menu sin generar un deposito
+                    while (!leer.hasNextDouble()) {
+                        System.out.println("Entrada invalida. Por favor, ingrese opcion numerica.");
+                        leer.next(); // Limpiar la entrada inválida
+                    }
+                    double cantidadDeposito = leer.nextDouble();
+                    if (cantidadDeposito == 0) { // opcion para que el usuario vuelva al menu sin generar un deposito
                         System.out.println("Volviendo al Menu.");
                         break;
                     }
-                    cliente1.getWallet().depositar(cantidad);
-                    System.out.println("Monto depositado: " + String.format("%.0f", cantidad));
-                    System.out.println("Su nuevo saldo es: " + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                    cliente.getBilletera().depositar(cantidadDeposito);
+                    System.out.println("Monto para deposito: " + String.format("%.2f", cantidadDeposito));
+                    System.out.println("Su nuevo saldo es: " + String.format("%.2f", cliente.getBilletera().obtenerSaldo()));
                     System.out.println("________________________________ ");
-                }
-
-                case 3 -> {
+                    break;
+                case 3:
                     System.out.println("*Para volver a menu presione 0*");
                     System.out.println("Ingrese el monto a retirar: ");
+                    while (!leer.hasNextInt()) {
+                        System.out.println("Entrada invalida. Por favor, ingrese opcion numerica.");
+                        leer.next(); // Limpiar la entrada inválida
+                    }
                     double cantidadRetiro = leer.nextDouble();
-                    if (cantidadRetiro == 0) {
-                        System.out.println("Volviendo al Menu.");
-                        break;
-                    }
-                    if (cantidadRetiro > 0) {
-                        if (cliente1.getWallet().obtenerSaldo() >= cantidadRetiro) {
-                            cliente1.getWallet().retirar(cantidadRetiro);
-                            System.out.println("Monto retirado: " + String.format("%.0f", cantidadRetiro));
-                            System.out.println("Su nuevo saldo es: " + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
-                            System.out.println("________________________________ ");
-                        } else {
-                            System.out.println("No se pudo realizar el retiro. Saldo insuficiente.");
-                        }
-                    }
-                }
 
-                case 4 -> {
+                    cliente.getBilletera().retirar(cantidadRetiro);
+                    System.out.println("Monto para retiro: " + String.format("%.2f", cantidadRetiro));
+                    System.out.println("Su nuevo saldo es: " + String.format("%.2f", cliente.getBilletera().obtenerSaldo()));
+                    System.out.println("________________________________ ");
+                    break;
+
+                case 4:
                     System.out.println("*Para volver a menu presione 0*");
                     System.out.println("Ingrese el monto a convertir: ");
+                    while (!leer.hasNextDouble()) {
+                        System.out.println("Entrada invalida. Por favor, ingrese un valor numerico.");
+                        leer.next(); // Limpiar la entrada inválida
+                    }
+
                     double cantidad = leer.nextDouble();
                     if (cantidad == 0) {
                         System.out.println("Volviendo al Menu.");
                         break;
                     }
                     System.out.println("Indique el tipo de moneda ingresado");
-                    System.out.println("1. USD,  2.EU   o 3. CLP");
-                    int opcionMoneda = leer.nextInt();
+                    System.out.println("1. USD,  2. EUROS,  3. CLP");
+                    int opcionMoneda;
+                    while (true) {
+                        if (leer.hasNextInt()) {
+                            opcionMoneda = leer.nextInt();
+                            if (opcionMoneda >= 1 && opcionMoneda <= 3) {
+                                break;
+                            } else {
+                                System.out.println("Opcion de moneda no valida. Por favor, elija una opción válida.");
+                            }
+                        } else {
+                            System.out.println("Entrada invalida. Por favor, ingrese una opcion numerica.");
+                            leer.next(); // Limpiar la entrada inválida
+                        }
+                    }
                     switch (opcionMoneda) {
-                        case 1 -> {
+                        case 1:
                             System.out.println("$" + cantidad + " dolares");
                             System.out.println("Elija opcion de cambio : ");
                             System.out.println("1. Deposito de USD a su cuenta en pesos ");
                             System.out.println("2. Retiro de pesos para cambio en USD");
-                        }
-                        case 2 -> {
+                            break;
+                        case 2:
                             System.out.println("€" + cantidad + " euros");
                             System.out.println("Elija opcion de cambio : ");
                             System.out.println("3. Deposito de EU a su cuenta en pesos ");
                             System.out.println("4. Retiro de pesos para cambio en EU");
-                        }
-                        case 3 -> {
+                            break;
+                        case 3:
                             System.out.println("$" + cantidad + " pesos");
                             System.out.println("Elija opcion de cambio : ");
                             System.out.println("5. Cambio a Dolar ");
                             System.out.println("6. Cambio a euro");
+                            break;
+                        default:
+                            System.out.println("Opcion de moneda no valida.");
+                    }
+                    System.out.println("________________________________ ");
+                    int aMoneda;
+                    while (true) {
+                        if (leer.hasNextInt()) {
+                            aMoneda = leer.nextInt();
+                            if (aMoneda >= 1 && aMoneda <= 6) {
+                                break;
+                            } else {
+                                System.out.println("Opcion no valida. Por favor, elija una opción válida.");
+                            }
+                        } else {
+                            System.out.println("Entrada invalida. Por favor, ingrese una opcion numerica.");
+                            leer.next(); // Limpiar la entrada inválida
                         }
-                        default -> System.out.println("Opcion de moneda no valida.");
-                    }   System.out.println("________________________________ ");
-                    int aMoneda = leer.nextInt();
-                    cliente1.getWallet().convertirMoneda(aMoneda, cantidad);// Llama al método convertirMoneda según la opción seleccionada
-                    System.out.println("Su nuevo saldo es: $" + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                    }
+                    cliente.getBilletera().convertirMoneda(cantidad, aMoneda);// Llama al método convertirMoneda según la opción seleccionada
+                    System.out.println("Su nuevo saldo es: $" + String.format("%.2f", cliente.getBilletera().obtenerSaldo()));
                     System.out.println("________________________________ ");
-                }
+                    break;
 
+                case 5:
 
-
-                case 5 -> {
-                    System.out.println("Cartola de Operaciones ");
-                    System.out.println("Don(a)  " + nombreCliente);
-                    cliente1.getWallet().obtenerTransacciones();
-                    System.out.println("________________________________ ");
-                }
-
-                case 6 -> {
                     System.out.println("*Para volver a menu presione 0*");
+                    System.out.println("Seleccione el destinatario:");
+                    for (int i = 0; i < clientesPredefinidos.size(); i++) {
+                        System.out.println((i + 1) + ". " + clientesPredefinidos.get(i).getNombreCliente());
+                    }
+
+                    int opcionDestinatario;
+
+                    // Validar entrada numérica para opcionDestinatario
+                    while (!leer.hasNextInt()) {
+                        System.out.println("Por favor, ingrese un valor numérico de 1 a " + clientesPredefinidos.size());
+                        leer.next(); // Limpiar la entrada inválida
+                    }
+
+                    opcionDestinatario = leer.nextInt();
+                    if (opcionDestinatario == 0){
+                        System.out.println("Volviendo a Menu Wallet");
+                        break;
+                    }
+
+                    // Verificar si la opción seleccionada está dentro del rango válido
+                    if (opcionDestinatario < 1 || opcionDestinatario > clientesPredefinidos.size()) {
+                        System.out.println("Opcion invalida. Verifique la seleccion.");
+                        break;
+                    }
+
+                    // Obtener el cliente correspondiente según la opción seleccionada
+                    Cliente destinatario = clientesPredefinidos.get(opcionDestinatario - 1);
+                    String nombreDestinatario = destinatario.getNombreCliente(); // Obtener el nombre del destinatario
+
                     System.out.println("Ingrese el monto a transferir: ");
+
                     double montoTransferencia;
 
                     // Validar entrada numérica para montoTransferencia
@@ -259,51 +508,80 @@ public class AlkeWallet {
                         System.out.println("Entrada invalida. Por favor, ingrese un valor numerico.");
                         leer.next(); // Limpiar la entrada inválida
                     }
+
                     montoTransferencia = leer.nextDouble();
+
                     if (montoTransferencia == 0) {
                         System.out.println("Volviendo al Menu.");
                         break;
                     }
-                    System.out.println("Seleccione el destinatario:");
-                    System.out.println("1. Mario Canedo");
-                    System.out.println("2. Cristian Rodriguez");
-                    System.out.println("3. Andre Cuetos");
-                    int opcionDestinatario;
-                    // Validar entrada numérica para opcionDestinatario
-                    while (!leer.hasNextInt()) {
-                        System.out.println("Por favor, ingrese un valor numerico de 1 a 3.");
-                        leer.next(); // Limpiar la entrada inválida
-                    }
-                    opcionDestinatario = leer.nextInt();
-                    switch (opcionDestinatario) {
-                        case 1 -> {
-                            destinatario = new BilleteraDigital();
-                            destinatario.setnombreDestinatario("Mario Canedo");
-                        }
-                        case 2 -> {
-                            destinatario = new BilleteraDigital();
-                            destinatario.setnombreDestinatario("Cristian Rodriguez");
-                        }
-                        case 3 -> {
-                            destinatario = new BilleteraDigital();
-                            destinatario.setnombreDestinatario("Andre Cuetos");
-                        }
-                        default -> {
-                            System.out.println("Opcion invalida. Verifique la seleccion.");
-                            return; // Salir del case sin hacer la transferencia
-                        }
+
+                    // Verificar si el cliente tiene suficiente saldo disponible para la transferencia
+                    if (montoTransferencia <= cliente.getBilletera().obtenerSaldo()) {
+                        // Realizar la transferencia al destinatario seleccionado
+                        cliente.getBilletera().hacerTransferencia(montoTransferencia, nombreDestinatario);
+                        System.out.println("Transferencia exitosa. Su nuevo saldo es: $" + String.format("%.2f", cliente.getBilletera().obtenerSaldo()));
+                    } else {
+                        // El cliente no tiene suficiente saldo disponible
+                        System.out.println("Saldo insuficiente. No se puede realizar la transferencia.");
                     }
 
-                    cliente1.getWallet().hacerTransferencia(montoTransferencia, destinatario);
-                    System.out.println("Su nuevo saldo es: $" + String.format("%.0f", cliente1.getWallet().obtenerSaldo()));
+                    System.out.println("Su nuevo saldo es: $" + String.format("%.2f", cliente.getBilletera().obtenerSaldo()));
                     System.out.println("________________________________ ");
-                }
+                    break;
 
-                default -> System.out.println("Elija una opcion valida");
+                case 6:
+                    System.out.println("Historial de Transacciones: ");
+                    System.out.println("Don(a)  " + cliente.getNombreCliente());
+                    List<String> transacciones = cliente.getBilletera().obtenerTransacciones();
+                    if (transacciones.isEmpty()) {
+                        System.out.println("No hay transacciones disponibles.");
+                    } else {
+                        for (String transaccion : transacciones) {
+                            System.out.println(transaccion);
+                        }
+                    }
+                    System.out.println("________________________________ ");
+                    break;
+
+                default:
+                    System.out.println("Elija una opcion valida");
             }
         } while (opcionWallet != 0);
 
-        leer.close();
+    }
+
+// Método para mostrar el menú de la billetera 
+    private static void mostrarMenuWallet(Cliente cliente) {
+
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date fechaActual = new Date();
+        String fechaHoraActual = formatoFecha.format(fechaActual);
+        System.out.println("________________________________ ");
+        System.out.println("          BANCO  ALKEMY  DIGITAL   ");
+        System.out.println("________________________________ ");
+        System.out.println("W     W     W     ");
+        System.out.println("  W  W W  W    ");
+        System.out.println("    W   W            ");
+        System.out.println("________________________________ ");
+        System.out.println("                     MENU WALLET  ");
+        System.out.println("                  CUENTA DIGITAL  ");
+        System.out.println("             " + fechaHoraActual);
+        System.out.println("________________________________");
+        System.out.println("Don(a) " + cliente.getNombreCliente());
+        System.out.println("________________________________");
+        System.out.println(" 1: CONSULTA DE SALDO");
+        System.out.println(" 2: REALIZAR DEPOSITO");
+        System.out.println(" 3: REALIZAR RETIRO");
+        System.out.println(" 4: CONVERTIR MONEDA");
+        System.out.println(" 5: REALIZAR TRANSFERENCIA ");
+        System.out.println(" 6: HISTORIAL DE  TRANSACCIONES");
+        System.out.println(" 0: SALIR MENU");
+        System.out.println("________________________________");
+        System.out.println(" Por favor ingrese una opcion: ");
+        System.out.println("________________________________");
+        System.out.println(" ");
+
     }
 
 }
