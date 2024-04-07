@@ -5,7 +5,7 @@
 package com.mycompany.alkewallet;
 
 import java.util.Scanner;
-import java.util.Random;
+
 
 /**
  * La clase CuentaBancaria representa una cuenta bancaria asociada a un cliente.
@@ -94,13 +94,16 @@ public class CuentaBancaria {
      * @return El número de cuenta generado.
      */
     public static String generarNumeroCuenta(int rut) {
+        // Convertir el RUT a cadena y eliminar el dígito verificador
         String rutStr = String.valueOf(rut);
-        String cuentaGenerada = rutStr.substring(0, rutStr.length() - 1) + "-"
-                + String.format("%03d", contadorCuentas);
-        // Agrega un número aleatorio adicional al final del número de cuenta
-        Random random = new Random();
-        cuentaGenerada += String.format("%03d", random.nextInt(1000));
-        return cuentaGenerada;
+        rutStr = rutStr.substring(0, rutStr.length() - 1);
+        // Concatenar el contador de cuentas formateado a tres dígitos, comenzando desde 005
+    String cuentaGenerada = rutStr + String.format("%03d", contadorCuentas + 5);
+    
+    // Incrementar el contador de cuentas para el próximo cliente
+    contadorCuentas++;
+    
+    return cuentaGenerada;
     }
 
     /**
@@ -109,21 +112,21 @@ public class CuentaBancaria {
     public void generarPassword() {
         while (true) {
             try {
-                System.out.println("Ingrese una contraseña de 6 números:");
+                System.out.println("Ingrese una contrasena de 6 numeros:");
                 password = Integer.parseInt(leer.nextLine());
                 if (String.valueOf(password).length() == 6) {
-                    System.out.println("Confirme su contraseña:");
+                    System.out.println("Confirme su contrasena:");
                     int confirmarPassword = Integer.parseInt(leer.nextLine());
                     if (confirmarPassword == password) {
                         break;
                     } else {
-                        System.out.println("Las contraseñas no coinciden. Intente nuevamente.");
+                        System.out.println("Las contrasenas no coinciden. Intente nuevamente.");
                     }
                 } else {
-                    System.out.println("La contraseña debe tener 6 números. Intente nuevamente.");
+                    System.out.println("Contrasena no valida. Intente nuevamente.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Ingrese un valor numérico válido.");
+                System.out.println("Ingrese un valor numerico valido.");
             }
         }
     }
@@ -134,7 +137,7 @@ public class CuentaBancaria {
     public void obtenerTelefono() {
 
         while (true) {
-            System.out.println("Ingrese su numero de telefono de 9 digitos (solo nuemros):  ");
+            System.out.println("Ingrese su numero de telefono de 9 digitos (solo numeros):  ");
             String nuevoTelefono = leer.nextLine();
             // formato telefono final "+56 123456789"  Valida el formato del número de teléfono usando una expresión regular
             if (nuevoTelefono.matches("\\d{9}")) {//patron telefono
@@ -151,7 +154,7 @@ public class CuentaBancaria {
      */ 
     public void obtenerEmail() {
         while (true) {
-            System.out.println("Ingrese su correo electrónico: ");
+            System.out.println("Ingrese su correo electronico: ");
             String nuevoEmail = leer.nextLine();
 
             // Expresión regular para validar el formato del correo electrónico
@@ -159,10 +162,10 @@ public class CuentaBancaria {
 
             if (nuevoEmail.matches(patronCorreo)) {
                 this.email = nuevoEmail;
-                System.out.println("El correo electrónico ingresado es: " + nuevoEmail);
+                System.out.println("El correo electronico ingresado es: " + nuevoEmail);
                 break;
             } else {
-                System.out.println("El correo electrónico ingresado no es válido. Debe tener el formato usuario@example.com. Inténtelo nuevamente.");
+                System.out.println("El correo electronico ingresado no es valido. Debe tener el formato usuario@example.com Intentelo nuevamente.");
             }
         }
     }

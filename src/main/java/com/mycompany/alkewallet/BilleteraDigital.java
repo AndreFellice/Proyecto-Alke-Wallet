@@ -179,7 +179,8 @@ public class BilleteraDigital implements Wallet {
 
     @Override
     public List<String> obtenerTransacciones() {
-        System.out.println("Estas son sus transacciones del dia:");
+        System.out.println("Estos son sus movimientos del dia:");
+        System.out.println("________________________________ ");
         List<String> descricpcionTransacciones = new ArrayList<>();
         for (Transaccion transaccion : transacciones) {
             descricpcionTransacciones.add(transaccion.getDescripcion() + " - Fecha: " + transaccion.getFecha());

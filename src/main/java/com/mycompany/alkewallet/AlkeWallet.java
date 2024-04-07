@@ -126,8 +126,17 @@ public class AlkeWallet {
     private static void accesoCuenta(Scanner leer, ArrayList<Cliente> clientesPredefinidos, ArrayList<CuentaBancaria> cuentasPredefinidas) {
 
         System.out.println("________________________________ ");
-        System.out.println("Accediendo a  Billetera Digital");
+        System.out.println("          BANCO  ALKEMY  DIGITAL   ");
         System.out.println("________________________________ ");
+        System.out.println("W     W     W     ");
+        System.out.println("  W  W W  W    ");
+        System.out.println("    W   W            ");
+        System.out.println("________________________________ ");
+        System.out.println("                     MENU WALLET  ");
+        System.out.println("                  CUENTA DIGITAL  ");
+        System.out.println("________________________________");
+        System.out.println("ACCESO");
+        System.out.println("________________________________");
         leer.nextLine(); // Limpiar el buffer del scanner
         // Lógica para solicitar el RUT y la contraseña del cliente
         System.out.println("Ingrese su RUT : ");
@@ -159,6 +168,7 @@ public class AlkeWallet {
                     // La autenticación es exitosa
                     System.out.println("________________________________ ");
                     System.out.println("Bienvenido, Don(a) " + cliente.getNombreCliente() + "!");
+
                     menuWallet(leer, cliente); // Llama al método menuWallet con el cliente válido
                     return;
                 } else {
@@ -179,16 +189,28 @@ public class AlkeWallet {
 // Crear un nuevo cliente
         Cliente nuevoCliente = crearCliente(leer); // Crear una nueva cuenta bancaria
         CuentaBancaria nuevaCuenta = crearCuentaBancaria(nuevoCliente, leer);// Asignar la billetera digital al cliente
+
         BilleteraDigital nuevaBilletera = new BilleteraDigital(); // Crear una nueva billetera digital
         nuevoCliente.setBilletera(nuevaBilletera); // Asignar la billetera al cliente
         // Agregar el nuevo cliente a la lista de usuarios
-
         clientesAdicionales.add(nuevoCliente);
         cuentasAdicionales.add(nuevaCuenta);
 
-        System.out.println("Cuenta digital creada con exito Don(a)  " + nuevoCliente.getNombreCliente() + "!");
-        System.out.println("Accediendo a su Billetera Digital");
         System.out.println("________________________________ ");
+        System.out.println("Cuenta digital creada con exito ");
+        System.out.println("________________________________ ");
+        System.out.println("          BANCO  ALKEMY  DIGITAL   ");
+        System.out.println("________________________________ ");
+        System.out.println("W     W     W     ");
+        System.out.println("  W  W W  W    ");
+        System.out.println("    W   W            ");
+        System.out.println("________________________________ ");
+        System.out.println("                     MENU WALLET  ");
+        System.out.println("                  CUENTA DIGITAL  ");
+        System.out.println("________________________________");
+        System.out.println("Don(a) " + nuevoCliente.getNombreCliente());
+        System.out.println("ACCESO");
+        System.out.println("________________________________");
 
         // Accede a una verificacion para acceder posteriormente al menú de la billetera digital
         verificacionMenuWallet(leer, nuevoCliente);
@@ -202,30 +224,35 @@ public class AlkeWallet {
     }
 
     private static CuentaBancaria crearCuentaBancaria(Cliente cliente, Scanner leer) {
-        System.out.println("Ingrese una contrasena para su cuenta: ");
-        System.out.println("Esta debe tener 6 numeros exactamente");
-        int password = leer.nextInt();
-        System.out.println("________________________________ ");
-        // Se solicita al usuario el número de teléfono y el correo electrónico
-        System.out.println("Ingrese su numero de telefono: ");
-        int telefono = leer.nextInt();
-        System.out.println("________________________________ ");
-        System.out.println("Ingrese su correo electronico: ");
-        String email = leer.next();
-        System.out.println("________________________________ ");
 
-        // Generar un número de cuenta 
-        String numeroCuenta = CuentaBancaria.generarNumeroCuenta(cliente.getRut());
+        System.out.println("Creacion de Cuenta Bancaria:");
+        CuentaBancaria nuevaCuenta = new CuentaBancaria(
+                CuentaBancaria.generarNumeroCuenta(cliente.getRut()),
+                cliente, 0, 0, null);
 
-        return new CuentaBancaria(numeroCuenta, cliente, password, telefono, email);
+        // Llamar a los métodos correspondientes para obtener la contraseña, el teléfono y el correo electrónico
+        nuevaCuenta.generarPassword();
+        System.out.println("Contrasena ingresada correctamente");
+        System.out.println("________________________________");
+        nuevaCuenta.obtenerTelefono();
+        System.out.println("Telefono ingresado correctamente");
+        System.out.println("________________________________");
+        nuevaCuenta.obtenerEmail();
+        System.out.println("Correo electronico  ingresado correctamente");
+        System.out.println("________________________________");
+        System.out.println("Su numero de cuenta es: " + nuevaCuenta.getNumeroCuenta());
+
+        cliente.setCuenta(nuevaCuenta);
+        return nuevaCuenta;
+
     }
 
     private static void verificacionMenuWallet(Scanner leer, Cliente cliente) {
         // Verificar la autenticación
         if (autenticarCliente(leer, cliente)) {
-            System.out.println("Bienvenido, " + cliente.getNombreCliente() + "!");
-            mostrarMenuWallet(cliente); // Mostrar el menú de la billetera digital
-            // Agregar el resto de la lógica del menú de la billetera aquí
+            System.out.println("________________________________");
+            System.out.println("Bienvenido,  Don(a) " + cliente.getNombreCliente() + "!");
+            menuWallet(leer, cliente);  // Mostrar el menú de la billetera digital ya como cliente
         } else {
             System.out.println("Cliente no encontrado o contrasena incorrecta. Verifique su RUT y contrasena.");
         }
@@ -240,7 +267,14 @@ public class AlkeWallet {
         int password = leer.nextInt();
 
         // Verificar la autenticación
-        return cliente.getRut() == rutCliente && cliente.getCuentaBancaria().getPassword() == password;
+        if (cliente.getRut() == rutCliente && cliente.getCuentaBancaria().getPassword() == password) {
+            // Autenticación exitosa
+            return true;
+        } else {
+            // Autenticación fallida
+            System.out.println("Cliente no encontrado o contrasena incorrecta. Verifique su RUT y contrasena.");
+            return false;
+        }
     }
 
 // Método para validar el nombre del cliente
@@ -251,7 +285,9 @@ public class AlkeWallet {
         leer.nextLine(); // Limpiar el buffer del scanner 
         while (!nombreValido) {
             try {
+                System.out.println("________________________________");
                 System.out.println("Bienvenido  ");
+                System.out.println("________________________________");
                 System.out.println("Por favor, ingrese su nombre: ");
                 nombreCliente = leer.nextLine(); // Leer la entrada del usuario como String
 
@@ -285,7 +321,7 @@ public class AlkeWallet {
         while (!rutValido) {
             try {
 
-                System.out.println("Ingrese su Rut (con digito verificador):  ");
+                System.out.println("Ingrese su Rut completo (sin puntos ni guion):  ");
                 while (!leer.hasNextInt()) {
                     System.out.println("RUT invalido. Por favor, ingrese solo numeros.");
                     leer.next(); // Limpiar el buffer del scanner
@@ -348,13 +384,13 @@ public class AlkeWallet {
 
                     switch (confirmacion) {
                         case 1:
-                            System.out.println("Saliendo del Menú. ¡Hasta luego!");
+                            System.out.println("Saliendo del Menu. ¡Hasta luego!");
                             return; // Salir del método menuWallet
                         case 2:
-                            System.out.println("Cancelando operación. Volviendo al Menú...");
+                            System.out.println("Cancelando operacion. Volviendo al Menu...");
                             break; // Volver al Menú
                         default:
-                            System.out.println("Opción no válida. Volviendo al Menú...");
+                            System.out.println("Opción no valida. Volviendo al Menu...");
                     }
                     System.out.println("________________________________ ");
                     break;
@@ -484,7 +520,7 @@ public class AlkeWallet {
                     }
 
                     opcionDestinatario = leer.nextInt();
-                    if (opcionDestinatario == 0){
+                    if (opcionDestinatario == 0) {
                         System.out.println("Volviendo a Menu Wallet");
                         break;
                     }
@@ -533,6 +569,7 @@ public class AlkeWallet {
                 case 6:
                     System.out.println("Historial de Transacciones: ");
                     System.out.println("Don(a)  " + cliente.getNombreCliente());
+                    System.out.println("________________________________ ");
                     List<String> transacciones = cliente.getBilletera().obtenerTransacciones();
                     if (transacciones.isEmpty()) {
                         System.out.println("No hay transacciones disponibles.");
@@ -569,6 +606,18 @@ public class AlkeWallet {
         System.out.println("             " + fechaHoraActual);
         System.out.println("________________________________");
         System.out.println("Don(a) " + cliente.getNombreCliente());
+        // Numero de cuenta del cliente nuevo
+        if (cliente.getCuentaBancaria() != null) {
+            System.out.println("Cuenta Nro:  " + cliente.getCuentaBancaria().getNumeroCuenta());
+        }
+
+// Mostrar el número de cuenta del cliente predefinido 
+        for (CuentaBancaria cuenta : cuentasPredefinidas) {
+            if (cuenta.getCliente() == cliente) {
+                System.out.println("Cuenta Nro: " + cuenta.getNumeroCuenta());
+                break; // Una vez encontrado, salir del bucle
+            }
+        }
         System.out.println("________________________________");
         System.out.println(" 1: CONSULTA DE SALDO");
         System.out.println(" 2: REALIZAR DEPOSITO");
