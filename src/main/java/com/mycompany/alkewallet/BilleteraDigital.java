@@ -7,6 +7,7 @@ package com.mycompany.alkewallet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.Scanner;
 
 /**
  *
@@ -14,7 +15,7 @@ import java.util.Date;
  */
 public class BilleteraDigital implements Wallet {
     //Atributos
-
+    Scanner leer = new Scanner(System.in);
     private double saldo; // Muestra el saldo de cliente
     private List<Transaccion> transacciones; //mostrar o listar  informacion de cliente
     private String moneda;
@@ -104,18 +105,17 @@ public class BilleteraDigital implements Wallet {
     }
 
     @Override
-    public void convertirMoneda(double cantidad, int aMoneda) {
+    public void convertirMoneda(double cantidad, int aMoneda) throws IllegalArgumentException {
         // Define la tasa de cambio de USD o Euro  a CLP (pesos chilenos)
         double tasaCambioUsd = 940.80;  // // Tasa de cambio: 1 Dólar = 940.80 pesos chilenos
         double tasaCambioEu = 1018.55; // // Tasa de cambio: 1 Euro = 1018.55 pesos chilenos
-        // Verifica si la conversión es de USD o  EU  a CLP o viceversa
-         if (cantidad < 0 || this.saldo < cantidad) {
+        // Verifica que la cantidad ingresada se valide para generar las operaciones
+          if (cantidad < 0 || this.saldo < cantidad) {
             System.out.println("Error. Saldo Insuficiente o monto invalido para convertir.");
             return;
         }
         switch (aMoneda) {
-            case 1:
-                // Cliente Convierte  dólares  en  pesos chilenos para deposito en su cuenta
+            case 1:// Cliente Convierte  dólares  en  pesos chilenos para deposito en su cuenta
                 double pesos = cantidad * tasaCambioUsd;
                 this.saldo += pesos;
                 String cantidadR = String.format("%.2f", cantidad);
@@ -125,8 +125,7 @@ public class BilleteraDigital implements Wallet {
                 System.out.println("La cantidad convertida a pesos chilenos es: $" + String.format("%.0f", pesos));
                 System.out.println("Su nuevo saldo es: $" + String.format("%.2f", obtenerSaldo()));
                 break;
-            case 2:
-                // Cliente solicita Conversion de  pesos chilenos a dolares y retira en pesos chilenos desde su cuenta
+            case 2: // Cliente solicita Conversion de dolares a pesos chilenos para retirarlos desde su cuenta
                 pesos = cantidad * tasaCambioUsd;
                 this.saldo -= pesos;
                 String cantidadR2 = String.format("%.2f", cantidad);
@@ -136,8 +135,7 @@ public class BilleteraDigital implements Wallet {
                 System.out.println("La cantidad retirada en CLP para cambiar a USD es: $" + String.format("%.2f", pesos));
                 System.out.println("Su nuevo saldo es: $" + String.format("%.2f", obtenerSaldo()));
                 break;
-            case 3:
-                //Cliente Convierte  euros  en  pesos chilenos para deposito en su cuenta
+            case 3://Cliente Convierte  euros  en  pesos chilenos para deposito en su cuenta
                 pesos = cantidad * tasaCambioEu;
                 this.saldo += pesos;
                 String cantidadR3 = String.format("%.2f", cantidad);
@@ -147,8 +145,7 @@ public class BilleteraDigital implements Wallet {
                 System.out.println("La cantidad convertida a pesos chilenos es: $" + String.format("%.2f", pesos));
                 System.out.println("Su nuevo saldo es: $" + String.format("%.2f", obtenerSaldo()));
                 break;
-            case 4:
-                // Cliente solicita Conversion de  pesos chilenos a dolares y retira en pesos chilenos desde su cuenta
+            case 4:// Cliente solicita Conversion de euros a pesos chilenos para retirarlos desde su cuenta 
                 pesos = cantidad * tasaCambioEu;
                 this.saldo -= pesos;
                 String cantidadR4 = String.format("%.2f", cantidad);
@@ -158,23 +155,22 @@ public class BilleteraDigital implements Wallet {
                 System.out.println("La cantidad retirada en CLP para cambiar a EU es " + String.format("%.2f", pesos));
                  System.out.println("Su nuevo saldo es: $" + String.format("%.2f", obtenerSaldo()));
                 break;
-            case 5:
-                // Cliente solicita Conversion de  pesos chilenos a dolares modo consulta 
+            case 5:// Cliente solicita Conversion de  pesos chilenos a dolares en modo consulta
                 double dolares = cantidad / tasaCambioUsd;
                 transacciones.add(new Transaccion(new Date(), " Conversion a dolares * cambio de divisa: -" + String.format("%.2f", dolares)));
                 System.out.println("El valor del dolar es $" + tasaCambioUsd);
                 System.out.println("La Conversion a moneda extranjera es: $ " + String.format("%.2f", dolares));
                 break;
-            case 6:
-                // Cliente solicita Conversion de  pesos chilenos a euros
+            case 6:// Cliente solicita Conversion de  pesos chilenos a euros en modo consulta
                 double euros = cantidad / tasaCambioEu;
                 transacciones.add(new Transaccion(new Date(), " Conversion a dolares * cambio de divisa: -" + String.format("%.2f", euros)));
                 System.out.println("El valor del dolar es $" + tasaCambioUsd);
                 System.out.println("La Conversion a moneda extranjera es: $ " + String.format("%.2f", euros));
                 break;
             default: // Conversión no soportada
-                System.out.println("Conversion no soportada.");
+               throw new IllegalArgumentException("Conversión no soportada.");
         }
+        
     }
 
     @Override
